@@ -1,6 +1,8 @@
 import numpy as np
 import sys, time
 from ram import RAM
+from helpers.instr import instr
+
 
 class Core:
     def __init__(self, id, ram):
@@ -48,7 +50,7 @@ class MDPU:
             0x12: self.swap,
             0x13: self.inc,
             0x14: self.dec,
-            0xFF: self.halt
+            0xFF: self.halt,
         }
 
     def fetch(self):
@@ -230,23 +232,27 @@ class MDPU:
             self.constant_registers[reg] = True  # Mark this register as a constant
         else:
             raise IndexError(f"Register index out of range: {reg}")
+
     # 0x12
     def swap(self):
         reg1 = self.ram.read(self.pc)
         reg2 = self.ram.read(self.pc + 1)
         self.pc += 2
         if reg1 < len(self.registers) and reg2 < len(self.registers):
-            self.registers[reg1], self.registers[reg2] = self.registers[reg2], self.registers[reg1]
+            self.registers[reg1], self.registers[reg2] = (
+                self.registers[reg2],
+                self.registers[reg1],
+            )
         else:
             raise IndexError(f"Register index out of range: reg1={reg1}, reg2={reg2}")
-    
+
     # 0x13
     def inc(self):
         reg = self.ram.read(self.pc)
         self.pc += 1
         self.registers[reg] += 1
         self.registers[reg] &= 0xFF
-    
+
     # 0x14
     def dec(self):
         reg = self.ram.read(self.pc)
@@ -272,37 +278,26 @@ class MDPU:
         self.ram.load_program(program)
 
     def __repr__(self):
-        return (f"MultiDimensionalProcessor(shape={self.shape}, dtype={self.dtype})\n"
-                f"Array:\n{self.array}\n"
-                f"RAM:\n{self.ram.visualize()}\n"
-                f"Registers: {self.registers}\n"
-                f"Stack: {self.stack}\n")
+        return (
+            f"MultiDimensionalProcessor(shape={self.shape}, dtype={self.dtype})\n"
+            f"Array:\n{self.array}\n"
+            f"RAM:\n{self.ram.visualize()}\n"
+            f"Registers: {self.registers}\n"
+            f"Stack: {self.stack}\n"
+        )
 
 
 # Example Usage
 if __name__ == "__main__":
-    # Advanced program for the MDPU
-    program = [
-        0x11, 0x00, 0x0A,  # Load constant 10 into R0
-        0x11, 0x01, 0x05,  # Load constant 5 into R1
-        0x01, 0x02, 0x03,  # Load immediate value 3 into R2
-        0x02, 0x02, 0x01,  # Add R1 to R2 (R2 = R2 + R1)
-        0x03, 0x02, 0x10,  # Store R2 at RAM address 16
-        0x04, 0x03, 0x10,  # Load value from RAM address 16 into R3
-        0x05, 0x03, 0x01,  # Subtract R1 from R3 (R3 = R3 - R1)
-        0x06, 0x03, 0x01,  # Multiply R3 by R1 (R3 = R3 * R1)
-        0x07, 0x03, 0x01,  # Divide R3 by R1 (R3 = R3 / R1)
-        0x08, 0x03, 0x01,  # AND R3 with R1 (R3 = R3 & R1)
-        0x09, 0x03, 0x01,  # OR R3 with R1 (R3 = R3 | R1)
-        0x0A, 0x03, 0x01,  # XOR R3 with R1 (R3 = R3 ^ R1)
-        0x0B, 0x03,        # NOT R3 (R3 = ~R3)
-        0x0F, 0x03,        # Push R3 onto the stack
-        0x10, 0x04,        # Pop the stack into R4
-        0x12, 0x04, 0x01,  # Swap R4 and R1
-        0x13, 0x04,        # Increment R4
-        0x14, 0x04,        # Decrement R4
-        0xFF               # Halt
-    ]
+    # Initialize the instruction file
+    instr_file = instr()
+    instr_file.load("programs/mdpu/0.instr")
+
+    # Parse the instruction file
+    instr_file.parse()
+
+    # Get the program
+    program = instr_file.get()
 
     # Initialize the processor
     processor = MDPU(shape=(3, 4, 5), num_cores=4, ram_size=64, bits=16)
