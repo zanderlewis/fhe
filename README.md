@@ -7,3 +7,5 @@
 
 ## MDPU
 Multi Dimension Processing Unit. The MDPU is like a normal CPU, but has layers, allowing multiple dimensions, and therefore more processing power.
+
+[Read More](mdpu/README.md)
