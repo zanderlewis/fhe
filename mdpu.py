@@ -10,7 +10,7 @@ class Core:
         return operation(*args, **kwargs)
 
 
-class MultiDimensionalProcessor:
+class MultiDimensionalProcessorUnit:
     def __init__(self, shape, num_cores, ram_size, bits=16, dtype=int, debug=False):
         self.shape = shape
         self.dtype = dtype
@@ -217,7 +217,7 @@ if __name__ == "__main__":
         0xFF               # Halt
     ]
 
-    processor = MultiDimensionalProcessor(shape=(3, 4, 5), num_cores=4, ram_size=64, bits=16, debug=True)
+    processor = MultiDimensionalProcessorUnit(shape=(3, 4, 5), num_cores=4, ram_size=64, bits=16, debug=True)
     processor.load_program(program)
     processor.run()
 
