@@ -2,9 +2,10 @@ import numpy as np
 import time
 from helpers.ram import RAM
 from helpers.instr import instr
+from helpers.core import Core
 
 class PPU:
-    def __init__(self, ram_size, bits=16, debug=False):
+    def __init__(self, ram_size, num_cores, bits=16, debug=False):
         self.ram = RAM(size=ram_size)
         self.registers = [0] * bits
         self.vector_registers = [np.zeros(3) for _ in range(bits)]  # 3D vectors
@@ -13,6 +14,7 @@ class PPU:
         self.running = True
         self.debug_mode = debug
         self.bits = bits
+        self.cores = [Core(i, self.ram) for i in range(num_cores)]
 
         # Instructions (opcode to function mapping)
         self.instructions = {
@@ -299,7 +301,7 @@ if __name__ == "__main__":
     program = instr_file.get()
 
     # Initialize the processor
-    processor = PPU(ram_size=64, bits=32, debug=True)
+    processor = PPU(ram_size=256, num_cores=1, bits=16, debug=False)
 
     # Load the program into RAM
     processor.load_program(program)
