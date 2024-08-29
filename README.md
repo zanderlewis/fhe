@@ -4,6 +4,7 @@
 ## Table of Contents
 - [fhe](#fhe)
   - [MDPU](#mdpu)
+  - [PPU](#ppu)
 
 ## MDPU
 Multi-Dimensional Processing Unit. The MDPU is like a normal CPU, but has layers, allowing multiple dimensions, and therefore more processing power.
