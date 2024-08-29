@@ -1,0 +1,11 @@
+0x01 0x00 10    # Load immediate value 10 into register 0
+0x01 0x01 20    # Load immediate value 20 into register 1
+0x01 0x02 2     # Load immediate value 2 into register 2 (scaling factor)
+0x08 0x00 0x01  # Vector add vector register 0 and vector register 1
+0x09 0x00 0x01  # Vector subtract vector register 0 and vector register 1
+0x0A 0x02 0x01  # Vector dot product of vector register 0 and vector register 1, store result in register 2
+0x0B 0x00 0x01  # Vector cross product of vector register 0 and vector register 1
+0x14 0x00       # Normalize vector register 0
+0x15 0x00 0x02  # Scale vector register 0 by the value in register 2
+0x16 0x00 0x03  # Calculate magnitude of vector register 0, store result in register 3
+0xFF            # Halt
