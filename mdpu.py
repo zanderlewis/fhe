@@ -1,5 +1,5 @@
 import numpy as np
-import sys
+import sys, time
 from ram import RAM
 
 class Core:
@@ -310,9 +310,19 @@ if __name__ == "__main__":
     # Load the program into RAM
     processor.load_program(program)
 
+    # Record the start time
+    start_time = time.time()
+
     # Run the processor
     processor.run()
+
+    # Record the end time
+    end_time = time.time()
+
+    # Calculate the execution time
+    execution_time = end_time - start_time
 
     # Print the final state of the registers and stack
     print(f"Registers: {processor.registers}")
     print(f"Stack: {processor.stack}")
+    print(f"Execution time: {execution_time:.6f} seconds")
