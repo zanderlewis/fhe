@@ -4,8 +4,11 @@ import time
 import numpy as np
 import sys
 
+
 class MDPU(PU):
-    def __init__(self, shape, ram_size, core_id=1, num_cores=1, bits=16, dtype=int, debug=False):
+    def __init__(
+        self, shape, ram_size, core_id=1, num_cores=1, bits=16, dtype=int, debug=False
+    ):
         super().__init__(ram_size, num_cores, bits, debug)
         self.shape = shape
         self.dtype = dtype

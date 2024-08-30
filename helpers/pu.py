@@ -6,6 +6,7 @@ from helpers.core import Core
 
 colorama.init(autoreset=True)
 
+
 class PU:
     def __init__(self, ram_size, num_cores=1, bits=16, debug=False):
         self.ram = RAM(size=ram_size)
@@ -155,7 +156,10 @@ class PU:
         reg1 = self.ram.read(self.pc)
         reg2 = self.ram.read(self.pc + 1)
         self.pc += 2
-        self.registers[reg1], self.registers[reg2] = self.registers[reg2], self.registers[reg1]
+        self.registers[reg1], self.registers[reg2] = (
+            self.registers[reg2],
+            self.registers[reg1],
+        )
 
     def inc(self):
         reg = self.ram.read(self.pc)

@@ -15,7 +15,9 @@ class Core:
 
     def decode_execute(self, opcode):
         # This method should be implemented in the subclass or passed as a parameter
-        raise NotImplementedError("decode_execute method should be implemented in the subclass")
+        raise NotImplementedError(
+            "decode_execute method should be implemented in the subclass"
+        )
 
     def run(self):
         while self.running:
