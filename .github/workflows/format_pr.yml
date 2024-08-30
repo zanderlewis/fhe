@@ -31,7 +31,7 @@ jobs:
         git config --global user.name 'github-actions[bot]'
         git config --global user.email 'github-actions[bot]@users.noreply.github.com'
         git config pull.rebase false
-        git pull origin ${{ github.head_ref }}
+        git pull origin ${{ github.head_ref }} --allow-unrelated-histories
         git add .
         git commit -m '[BOT]: Format with `black`'
         git push origin HEAD:${{ github.head_ref }}
