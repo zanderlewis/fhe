@@ -1,8 +1,8 @@
-# fhe
+# FHE
  ***F***ictional ***H***ardware ***E***mulators.
 
 ## Table of Contents
-- [fhe](#fhe)
+- [FHE](#fhe)
   - [MDPU](#mdpu)
   - [PPU](#ppu)
 
