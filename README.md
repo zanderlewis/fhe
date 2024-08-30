@@ -1,5 +1,5 @@
 # FHE
- ***F***ictional ***H***ardware ***E***mulators.
+***F***ictional ***H***ardware ***E***mulators.
 
 ## Table of Contents
 - [FHE](#fhe)
