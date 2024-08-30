@@ -5,25 +5,28 @@ from helpers import instr, PU
 
 colorama.init(autoreset=True)
 
+
 class PPU(PU):
     def __init__(self, ram_size, num_cores=1, bits=16, debug=False):
         super().__init__(ram_size, num_cores, bits, debug)
         self.vector_registers = [np.zeros(3) for _ in range(bits)]  # 3D vectors
 
         # Additional PPU-specific instructions
-        self.instructions.update({
-            0x08: self.vector_add,
-            0x09: self.vector_sub,
-            0x0A: self.vector_dot,
-            0x0B: self.vector_cross,
-            0x0C: self.calculate_force,
-            0x0D: self.calculate_velocity,
-            0x0E: self.calculate_position,
-            0x14: self.vector_normalize,
-            0x15: self.vector_scale,
-            0x16: self.vector_magnitude,
-        })
-    
+        self.instructions.update(
+            {
+                0x08: self.vector_add,
+                0x09: self.vector_sub,
+                0x0A: self.vector_dot,
+                0x0B: self.vector_cross,
+                0x0C: self.calculate_force,
+                0x0D: self.calculate_velocity,
+                0x0E: self.calculate_position,
+                0x14: self.vector_normalize,
+                0x15: self.vector_scale,
+                0x16: self.vector_magnitude,
+            }
+        )
+
     def load_program(self, program):
         for i, instruction in enumerate(program):
             if i < len(self.ram.memory):
@@ -31,7 +34,7 @@ class PPU(PU):
             else:
                 print(f"{Fore.RED}Program size exceeds RAM capacity at index: {i}")
                 sys.exit(1)
-    
+
     def run(self):
         self.pc = 0
         self.running = True
@@ -71,14 +74,18 @@ class PPU(PU):
         reg1 = self.ram.read(self.pc)
         reg2 = self.ram.read(self.pc + 1)
         self.pc += 2
-        self.registers[reg1] = np.dot(self.vector_registers[reg1], self.vector_registers[reg2])
+        self.registers[reg1] = np.dot(
+            self.vector_registers[reg1], self.vector_registers[reg2]
+        )
 
     # 0x0B
     def vector_cross(self):
         reg1 = self.ram.read(self.pc)
         reg2 = self.ram.read(self.pc + 1)
         self.pc += 2
-        self.vector_registers[reg1] = np.cross(self.vector_registers[reg1], self.vector_registers[reg2])
+        self.vector_registers[reg1] = np.cross(
+            self.vector_registers[reg1], self.vector_registers[reg2]
+        )
 
     # 0x0C
     def calculate_force(self):
@@ -86,7 +93,9 @@ class PPU(PU):
         accel_reg = self.ram.read(self.pc + 1)
         force_reg = self.ram.read(self.pc + 2)
         self.pc += 3
-        self.vector_registers[force_reg] = self.registers[mass_reg] * self.vector_registers[accel_reg]
+        self.vector_registers[force_reg] = (
+            self.registers[mass_reg] * self.vector_registers[accel_reg]
+        )
 
     # 0x0D
     def calculate_velocity(self):
@@ -95,7 +104,10 @@ class PPU(PU):
         time_reg = self.ram.read(self.pc + 2)
         vel_reg = self.ram.read(self.pc + 3)
         self.pc += 4
-        self.vector_registers[vel_reg] = self.vector_registers[init_vel_reg] + self.vector_registers[accel_reg] * self.registers[time_reg]
+        self.vector_registers[vel_reg] = (
+            self.vector_registers[init_vel_reg]
+            + self.vector_registers[accel_reg] * self.registers[time_reg]
+        )
 
     # 0x0E
     def calculate_position(self):
@@ -104,7 +116,10 @@ class PPU(PU):
         time_reg = self.ram.read(self.pc + 2)
         pos_reg = self.ram.read(self.pc + 3)
         self.pc += 4
-        self.vector_registers[pos_reg] = self.vector_registers[init_pos_reg] + self.vector_registers[vel_reg] * self.registers[time_reg]
+        self.vector_registers[pos_reg] = (
+            self.vector_registers[init_pos_reg]
+            + self.vector_registers[vel_reg] * self.registers[time_reg]
+        )
 
     # 0x14
     def vector_normalize(self):
@@ -113,7 +128,9 @@ class PPU(PU):
         if reg < len(self.vector_registers):
             norm = np.linalg.norm(self.vector_registers[reg])
             if norm == 0:
-                print(f"{Fore.YELLOW}Skipping normalization for zero vector in register {reg}")
+                print(
+                    f"{Fore.YELLOW}Skipping normalization for zero vector in register {reg}"
+                )
                 return
             self.vector_registers[reg] /= norm
         else:
@@ -139,7 +156,9 @@ class PPU(PU):
         if reg < len(self.vector_registers) and mag_reg < len(self.registers):
             self.registers[mag_reg] = np.linalg.norm(self.vector_registers[reg])
         else:
-            print(f"{Fore.RED}Register index out of range: reg={reg}, mag_reg={mag_reg}")
+            print(
+                f"{Fore.RED}Register index out of range: reg={reg}, mag_reg={mag_reg}"
+            )
             sys.exit(1)
 
     def __repr__(self):
@@ -150,6 +169,7 @@ class PPU(PU):
             f"RAM:\n{self.ram.memory}\n"
             f"Stack: {self.stack}\n"
         )
+
 
 # Example Usage
 if __name__ == "__main__":
