@@ -1,7 +1,7 @@
 import numpy as np
 import time, sys, colorama
 from colorama import Fore
-from helpers import instr, PU, Core
+from helpers import instr, PU
 
 colorama.init(autoreset=True)
 
