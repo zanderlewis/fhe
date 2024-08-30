@@ -1,27 +1,27 @@
 class instr:
-    # language to convert contents of .instr files to a py array
+    # Class to convert contents of .instr files to a Python array of opcodes
     def __init__(self):
-        self.instr = []
+        self.opcodes = []
 
     def load(self, path):
         if not path.endswith(".instr"):
             raise ValueError("Invalid file type. Please provide a .instr file")
         with open(path, "r") as f:
-            self.instr = f.readlines()
+            self.opcodes = f.readlines()
 
     def parse(self):
-        # remove comments (#)
-        self.instr = [x.split("#")[0] for x in self.instr]
-        # remove empty lines
-        self.instr = [x.strip() for x in self.instr if x.strip()]
+        # Remove comments (#)
+        self.opcodes = [x.split("#")[0] for x in self.opcodes]
+        # Remove empty lines
+        self.opcodes = [x.strip() for x in self.opcodes if x.strip()]
         # Split each line into individual opcodes and convert to integers
-        parsed_instr = []
-        for line in self.instr:
-            parsed_instr.extend(int(x, 16) for x in line.split())
-        self.instr = parsed_instr
+        parsed_opcodes = []
+        for line in self.opcodes:
+            parsed_opcodes.extend(int(x, 16) for x in line.split())
+        self.opcodes = parsed_opcodes
 
     def get(self):
-        return self.instr
+        return self.opcodes
 
     def __str__(self):
-        return str(self.instr)
+        return str(self.opcodes)
